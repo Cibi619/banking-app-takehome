@@ -1,0 +1,76 @@
+.accounts-container {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+.accounts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-row {
+  .account-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .account-details {
+      display: flex;
+      flex-direction: column;
+
+      .account-type {
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .account-name {
+        font-size: 14px;
+        color: gray;
+      }
+    }
+
+    .account-balance {
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 80px;
+  color: gray;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+  }
+
+  p {
+    font-size: 18px;
+  }
+}
