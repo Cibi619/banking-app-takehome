@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector } from '@angular/core';
+import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Firestore, addDoc, collection, getDocs, query, where } from '@angular/fire/firestore';
 import { forkJoin, from, map } from 'rxjs';
@@ -19,6 +19,7 @@ export class TransactionService {
     }
 
     getTransactionsByAccount(accountId: string) {
+      return runInInjectionContext(this.injector, () => {
       const transactionsRef = collection(this.fireStore, 'transactions');
       const sent$ = from(getDocs(query(
         transactionsRef,
@@ -41,6 +42,6 @@ export class TransactionService {
           } as unknown as Transaction));
           return [...sent, ...received].sort((a,b) => b.date.toMillis() - a.date.toMillis())
         })
-      )
+      )})
     }
 }

@@ -27,6 +27,12 @@
   gap: 16px;
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
 .account-row {
   .account-info {
     display: flex;

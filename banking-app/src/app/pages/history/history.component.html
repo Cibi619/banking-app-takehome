@@ -12,43 +12,56 @@
 
     <div class="transactions-list">
 
-        @if (transactions.length === 0) {
-            <div class="empty-state">
-                <mat-icon>credit_card_off</mat-icon>
-                <p>No transactions found</p>
-            </div>
+        @if (loadingService.isLoading()) {
+        <div class="loading-container">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
         }
 
-        @for (txn of transactions; track txn.id) {
-            <div class="transaction-card" [class.sent]="isSent(txn)" [class.received]="!isSent(txn)">
-                
-                <div class="left">
-                    <mat-icon class="direction-icon">
-                        {{ isSent(txn) ? 'arrow_upward' : 'arrow_downward' }}
-                    </mat-icon>
-                    <div class="details">
-                        <span class="title">
-                            {{ isSent(txn) ? 'To ' + getAccountName(txn.toAccountId) 
-                                           : 'From ' + getAccountName(txn.fromAccountId) }}
-                        </span>
-                        <span class="badge">
-                            {{ isSent(txn) ? getAccountType(txn.fromAccountId) 
-                                           : getAccountType(txn.toAccountId) | titlecase }}
-                        </span>
-                        @if (txn.description) {
-                            <span class="description">{{ txn.description }}</span>
-                        }
-                    </div>
-                </div>
 
-                <div class="right">
-                    <span class="amount">
-                        {{ isSent(txn) ? '-' : '+' }}${{ txn.amount | number: '1.2-2' }}
+        <div class="search-bar">
+            <mat-icon>search</mat-icon>
+            <input type="text" placeholder="Search by name, account type, amount..."
+                (input)="onSearch($any($event.target).value)" />
+        </div>
+
+        @if (transactions.length === 0) {
+        <div class="empty-state">
+            <mat-icon>credit_card_off</mat-icon>
+            <p>No transactions found</p>
+        </div>
+        }
+
+        @for (txn of filteredTransactions; track txn.id) {
+        <div class="transaction-card" [class.sent]="isSent(txn)" [class.received]="!isSent(txn)">
+
+            <div class="left">
+                <mat-icon class="direction-icon">
+                    {{ isSent(txn) ? 'arrow_upward' : 'arrow_downward' }}
+                </mat-icon>
+                <div class="details">
+                    <span class="title">
+                        {{ isSent(txn) ? 'To ' + getAccountName(txn.toAccountId)
+                        : 'From ' + getAccountName(txn.fromAccountId) }}
                     </span>
-                    <span class="date">{{ txn.date.toDate() | date: 'h:mma' }}</span>
+                    <span class="badge">
+                        {{ isSent(txn) ? getAccountType(txn.fromAccountId)
+                        : getAccountType(txn.toAccountId) | titlecase }}
+                    </span>
+                    @if (txn.description) {
+                    <span class="description">{{ txn.description }}</span>
+                    }
                 </div>
-
             </div>
+
+            <div class="right">
+                <span class="amount">
+                    {{ isSent(txn) ? '-' : '+' }}${{ txn.amount | number: '1.2-2' }}
+                </span>
+                <span class="date">{{ txn.date.toDate() | date: 'h:mma' }}</span>
+            </div>
+
+        </div>
         }
 
     </div>

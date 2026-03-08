@@ -18,24 +18,21 @@ export class AccountService {
     return addDoc(accountsRef, { ...account, userId });
   }
 
-  getAccounts(): Observable<Account[]> {
-    const uid = this.auth.currentUser?.uid;
+  getAccounts() {
+    return runInInjectionContext(this.injector, () => {
+      const uid = this.auth.currentUser?.uid;
+      if (!uid) return of([]);
 
-    if (!uid) return of([]);
-
-    const accountsRef = collection(this.fireStore, 'accounts');
-    const userQuery = query(
-      accountsRef,
-      where('userId', '==', uid)
-    );
-    return from(getDocs(userQuery)).pipe(
-      map(snapshot => snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as unknown as Account)))
-    );
+      const accountsRef = collection(this.fireStore, 'accounts');
+      const userQuery = query(accountsRef, where('userId', '==', uid));
+      return from(getDocs(userQuery)).pipe(
+        map(snapshot => snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }) as unknown as Account))
+      );
+    });
   }
-
   updateAccounts(id: string, balance: number) {
     const docRef = doc(this.fireStore, 'accounts', id);
     return updateDoc(docRef, { balance });

@@ -8,21 +8,27 @@ import { NavbarComponent } from '../../shared';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe, DecimalPipe, TitleCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LoadingService } from '../../services/loading.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-history',
-  imports: [NavbarComponent, MatIcon, DatePipe, DecimalPipe, TitleCasePipe, RouterLink],
+  imports: [NavbarComponent, MatIcon, DatePipe, DecimalPipe, TitleCasePipe, RouterLink, MatProgressSpinner],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
 export class HistoryComponent implements OnInit {
   transactions: Transaction[] = [];
+  filteredTransactions: Transaction[] = [];
   accounts: Account[] = [];
+  searchTerm = '';
   private destroy$ = new Subject<void>();
   private accountService = inject(AccountService);
   private transactionService = inject(TransactionService);
+  loadingService = inject(LoadingService);
 
   ngOnInit() {
+    this.loadingService.start();
     this.accountService.getAccounts().pipe(
       switchMap(accounts => {
         this.accounts = accounts;
@@ -40,9 +46,31 @@ export class HistoryComponent implements OnInit {
       }),
       takeUntil(this.destroy$)
     ).subscribe({
-      next: (transactions) => this.transactions = transactions,
-      error: (err) => console.error('Error fetching transactions', err)
+      next: (transactions) => {
+        this.loadingService.stop();
+        this.transactions = transactions;
+        this.filteredTransactions = transactions;
+      },
+      error: (err) => {
+        this.loadingService.stop();
+        console.error('Error fetching transactions', err)
+      }
     });
+  }
+
+  onSearch(term: string) {
+    this.searchTerm = term;
+    const lower = term.toLowerCase().trim();
+    if (!lower) {
+      this.filteredTransactions = this.transactions;
+      return;
+    }
+    this.filteredTransactions = this.transactions.filter(t =>
+      this.getAccountName(t.toAccountId).toLowerCase().includes(lower) ||
+      this.getAccountName(t.fromAccountId).toLowerCase().includes(lower) ||
+      this.getAccountType(t.fromAccountId).toLowerCase().includes(lower) ||
+      t.amount.toString().includes(lower)
+    );
   }
 
   getAccountName(accountId: string): string {
