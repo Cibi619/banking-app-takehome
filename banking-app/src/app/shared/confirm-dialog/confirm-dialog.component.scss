@@ -1,0 +1,35 @@
+.transfer-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 0;
+    min-width: 300px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
+
+    .label {
+        color: gray;
+        font-size: 14px;
+    }
+
+    .value {
+        font-weight: 500;
+        font-size: 14px;
+    }
+}
+
+.amount-row {
+    border-bottom: none;
+
+    .amount {
+        color: #1976d2;
+        font-size: 18px;
+        font-weight: 700;
+    }
+}

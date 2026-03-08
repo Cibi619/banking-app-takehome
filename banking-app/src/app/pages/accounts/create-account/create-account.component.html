@@ -1,0 +1,51 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <div class="redirect-back">
+        <a routerLink="/accounts">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Accounts
+        </a>
+    </div>
+    <h1>Create New Account</h1>
+    <div class="create-account-form">
+        <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+            
+            <mat-form-field appearance="outline">
+                <mat-label>Account Name</mat-label>
+                <input matInput formControlName="name" placeholder="e.g. Johnson Smith">
+                @if (createAccountForm.get('name')?.hasError('required')) {
+                    <mat-error>Account name is required</mat-error>
+                }
+                @if (createAccountForm.get('name')?.hasError('minlength')) {
+                    <mat-error>Minimum 3 characters</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Initial Balance</mat-label>
+                <input matInput type="number" formControlName="balance" placeholder="e.g. 500">
+                <span matPrefix>$&nbsp;</span>
+                @if (createAccountForm.get('balance')?.hasError('required')) {
+                    <mat-error>Balance is required</mat-error>
+                }
+                @if (createAccountForm.get('balance')?.hasError('min')) {
+                    <mat-error>Balance must be greater than 0</mat-error>
+                }
+            </mat-form-field>
+
+            <div class="account-type">
+                <label>Account Type</label>
+                <mat-radio-group formControlName="type">
+                    <mat-radio-button value="chequing">Chequing</mat-radio-button>
+                    <mat-radio-button value="savings">Savings</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <app-custom-button 
+                [label]="'Create Account'" 
+                [accountType]="selectedType">
+            </app-custom-button>
+
+        </form>
+    </div>
+</div>

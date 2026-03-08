@@ -1,1 +1,71 @@
-<p>transfer works!</p>
+<app-navbar></app-navbar>
+<div class="container">
+
+    <div class="redirect-back">
+        <a routerLink="/accounts">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Accounts
+        </a>
+    </div>
+
+    <h1>Transfer Funds</h1>
+
+    <div class="transfer-form">
+        <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+
+            <label>From Account</label>
+            <mat-select formControlName="fromAccountId">
+                @for (account of accounts; track account.id) {
+                    <mat-option [value]="account.id">
+                        {{ account.name }} ({{ account.type | titlecase }}) - ${{ account.balance | number: '1.2-2' }}
+                    </mat-option>
+                }
+            </mat-select>
+            @if (transferForm.get('fromAccountId')?.touched && transferForm.get('fromAccountId')?.hasError('required')) {
+                <mat-error>Please select a source account</mat-error>
+            }
+
+            <label>To Account</label>
+            <mat-select formControlName="toAccountId">
+                @for (account of accounts; track account.id) {
+                    <mat-option [value]="account.id">
+                        {{ account.name }} ({{ account.type | titlecase }}) - ${{ account.balance | number: '1.2-2' }}
+                    </mat-option>
+                }
+            </mat-select>
+            @if (transferForm.get('toAccountId')?.touched && transferForm.get('toAccountId')?.hasError('required')) {
+                <mat-error>Please select a destination account</mat-error>
+            }
+
+            <mat-form-field appearance="outline">
+                <mat-label>Amount</mat-label>
+                <span matPrefix>$&nbsp;</span>
+                <input matInput type="number" formControlName="amount">
+                @if (transferForm.get('amount')?.hasError('required')) {
+                    <mat-error>Amount is required</mat-error>
+                }
+                @if (transferForm.get('amount')?.hasError('min')) {
+                    <mat-error>Amount must be greater than 0</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Description (optional)</mat-label>
+                <input matInput formControlName="description">
+            </mat-form-field>
+
+            <p class="available-balance">
+                Available Balance: ${{ availableBalance | number: '1.2-2' }}
+            </p>
+
+            @if (errorMessage) {
+                <p class="error-message">{{ errorMessage }}</p>
+            }
+
+            <button mat-raised-button color="primary" type="submit">
+                Transfer
+            </button>
+
+        </form>
+    </div>
+</div>
