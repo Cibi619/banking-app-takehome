@@ -1,1 +1,55 @@
-<p>history works!</p>
+<app-navbar></app-navbar>
+<div class="container">
+
+    <div class="redirect-back">
+        <a routerLink="/accounts">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Accounts
+        </a>
+    </div>
+
+    <h1>Transaction History</h1>
+
+    <div class="transactions-list">
+
+        @if (transactions.length === 0) {
+            <div class="empty-state">
+                <mat-icon>credit_card_off</mat-icon>
+                <p>No transactions found</p>
+            </div>
+        }
+
+        @for (txn of transactions; track txn.id) {
+            <div class="transaction-card" [class.sent]="isSent(txn)" [class.received]="!isSent(txn)">
+                
+                <div class="left">
+                    <mat-icon class="direction-icon">
+                        {{ isSent(txn) ? 'arrow_upward' : 'arrow_downward' }}
+                    </mat-icon>
+                    <div class="details">
+                        <span class="title">
+                            {{ isSent(txn) ? 'To ' + getAccountName(txn.toAccountId) 
+                                           : 'From ' + getAccountName(txn.fromAccountId) }}
+                        </span>
+                        <span class="badge">
+                            {{ isSent(txn) ? getAccountType(txn.fromAccountId) 
+                                           : getAccountType(txn.toAccountId) | titlecase }}
+                        </span>
+                        @if (txn.description) {
+                            <span class="description">{{ txn.description }}</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="right">
+                    <span class="amount">
+                        {{ isSent(txn) ? '-' : '+' }}${{ txn.amount | number: '1.2-2' }}
+                    </span>
+                    <span class="date">{{ txn.date.toDate() | date: 'h:mma' }}</span>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>

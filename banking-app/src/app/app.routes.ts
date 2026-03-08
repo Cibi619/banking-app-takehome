@@ -16,9 +16,9 @@ export const routes: Routes = [
         loadChildren: () => import('./pages/transfer/transfer.routes')
             .then(m => m.TRANSFER_ROUTES)
     },
-    // {
-    //     path: 'history',
-    //     loadChildren: () => import('./pages/history/history.routes')
-    //         .then(m => m.HISTORY_ROUTES)
-    // }
+    {
+        path: 'history',
+        loadChildren: () => import('./pages/history/history.routes')
+            .then(m => m.HISTORY_ROUTES)
+    }
 ];
