@@ -1,4 +1,5 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavbarComponent } from '../../shared';
 import { MatIcon } from '@angular/material/icon';
 import { Account } from '../../models/account.model';
@@ -7,7 +8,7 @@ import { RouterLink } from '@angular/router';
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
-import { of, Subject, switchMap, takeUntil } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { MatProgressSpinner} from '@angular/material/progress-spinner';
 import { LoadingService } from '../../services/loading.service';
 import { CustomButtonComponent } from '../../shared/custom-button/custom-button.component';
@@ -18,12 +19,11 @@ import { CustomButtonComponent } from '../../shared/custom-button/custom-button.
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss'
 })
-export class AccountsComponent implements OnInit, OnDestroy {
+export class AccountsComponent implements OnInit {
   accounts: Account[] = [];
   loadingService = inject(LoadingService);
-  // isLoading = true;
-  private destroy$ = new Subject<void>();
 
+  private destroyRef = inject(DestroyRef);
   private accountService = inject(AccountService);
   private authService = inject(AuthService);
 
@@ -31,23 +31,16 @@ export class AccountsComponent implements OnInit, OnDestroy {
     this.loadingService.start();
     this.authService.getCurrentUser().pipe(
       switchMap(user => user ? this.accountService.getAccounts() : of([])),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (accounts) => {
         this.accounts = accounts
         this.loadingService.stop();
-        // this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching accounts', err)
         this.loadingService.stop();
-        // this.isLoading = false;
       }
     });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

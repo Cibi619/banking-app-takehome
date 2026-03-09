@@ -62,11 +62,7 @@ describe('AccountsComponent', () => {
     expect(component.accounts).toEqual([]);
   });
 
-  it('ngOnDestroy() should complete the destroy$ subject', () => {
-    const nextSpy = jest.spyOn((component as any).destroy$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroy$, 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('should inject DestroyRef for automatic unsubscription', () => {
+    expect((component as any).destroyRef).toBeDefined();
   });
 });

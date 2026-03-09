@@ -1,6 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Account } from '../../models/account.model';
-import { forkJoin, map, Subject, switchMap, takeUntil } from 'rxjs';
+import { forkJoin, map, switchMap } from 'rxjs';
 import { AccountService } from '../../services/account.service';
 import { TransactionService } from '../../services/transaction.service';
 import { Transaction } from '../../models/transaction.model';
@@ -22,7 +23,7 @@ export class HistoryComponent implements OnInit {
   filteredTransactions: Transaction[] = [];
   accounts: Account[] = [];
   searchTerm = '';
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
   private accountService = inject(AccountService);
   private transactionService = inject(TransactionService);
   loadingService = inject(LoadingService);
@@ -44,7 +45,7 @@ export class HistoryComponent implements OnInit {
         );
         return unique.sort((a, b) => b.date.toMillis() - a.date.toMillis());
       }),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (transactions) => {
         this.loadingService.stop();
@@ -85,8 +86,4 @@ export class HistoryComponent implements OnInit {
     return this.accounts.some(a => a.id === transaction.fromAccountId);
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 }
