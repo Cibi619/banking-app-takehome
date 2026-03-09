@@ -23,7 +23,7 @@ Before running this project, make sure you have the following installed:
 
 **1. Clone the repository**
 ```bash
-git clone <repo-url>
+git clone https://github.com/Cibi619/banking-app-takehome.git
 cd banking-app-takehome/banking-app
 ```
 
