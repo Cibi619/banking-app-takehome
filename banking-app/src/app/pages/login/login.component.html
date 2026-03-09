@@ -24,7 +24,7 @@
                     <p class="error-message">{{ errorMessage }}</p>
                 }
 
-                <button mat-raised-button color="primary">Login</button>
+                <app-custom-button label="Login"></app-custom-button>
                 <p style="text-align: center;">Don't have an account?
                     <a routerLink="/signup">Signup</a>
                 </p>
@@ -57,7 +57,7 @@
                     <mat-error>Passwords do not match</mat-error>
                     }
                 </mat-form-field>
-                <button mat-raised-button color="primary" type="submit">Sign Up</button>
+                <app-custom-button label="Sign Up"></app-custom-button>
                 <p style="text-align: center;">Already have an account?
                     <a routerLink="/login">Login</a>
                 </p>

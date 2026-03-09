@@ -1,16 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { CustomButtonComponent } from '../../shared/custom-button/custom-button.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [MatIconModule, MatButtonModule, MatCardModule, MatFormField, MatLabel, MatError, MatInputModule, RouterLink, ReactiveFormsModule],
+  imports: [MatIconModule, CustomButtonComponent, MatCardModule, MatFormField, MatLabel, MatError, MatInputModule, RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  passwordMatchValidator(form: AbstractControl) {
+  passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
 

@@ -14,7 +14,7 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import { MatSelect, MatOption } from '@angular/material/select'
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { CustomButtonComponent } from '../../shared/custom-button/custom-button.component';
 @Component({
   selector: 'app-transfer',
   imports: [MatDialogModule,
@@ -29,7 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
     DecimalPipe,
     MatOption,
     MatInputModule,
-    MatButtonModule,
+    CustomButtonComponent,
     RouterLink
   ],
   templateUrl: './transfer.component.html',
@@ -63,7 +63,7 @@ export class TransferComponent implements OnInit {
     })
   }
 
-  get availableBalance() {
+  get availableBalance(): number {
     const fromId = this.transferForm.get('fromAccountId')?.value;
     return this.accounts.find(u => u.id === fromId)?.balance ?? 0;
   }
@@ -93,7 +93,7 @@ export class TransferComponent implements OnInit {
     })
   }
 
-  performTransfer() {
+  performTransfer(): void {
     const { fromAccountId, toAccountId, amount, description } = this.transferForm.value;
     const fromAccount = this.accounts.find(acc => acc.id === fromAccountId);
     const toAccount = this.accounts.find(acc => acc.id === toAccountId);

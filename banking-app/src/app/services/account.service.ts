@@ -1,6 +1,6 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { addDoc, collection, collectionData, Firestore, doc, query, updateDoc, where, getDocs } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, Firestore, doc, query, updateDoc, where, getDocs, DocumentReference } from '@angular/fire/firestore';
 import { Account } from '../models/account.model';
 import { from, map, Observable, of } from 'rxjs';
 
@@ -12,13 +12,13 @@ export class AccountService {
   private auth = inject(Auth);
   private injector = inject(Injector);
 
-  createAccount(account: Account) {
+  createAccount(account: Account): Promise<DocumentReference> {
     const userId = this.auth.currentUser?.uid;
     const accountsRef = collection(this.fireStore, 'accounts');
     return addDoc(accountsRef, { ...account, userId });
   }
 
-  getAccounts() {
+  getAccounts(): Observable<Account[]> {
     return runInInjectionContext(this.injector, () => {
       const uid = this.auth.currentUser?.uid;
       if (!uid) return of([]);
@@ -33,7 +33,7 @@ export class AccountService {
       );
     });
   }
-  updateAccounts(id: string, balance: number) {
+  updateAccounts(id: string, balance: number): Promise<void> {
     const docRef = doc(this.fireStore, 'accounts', id);
     return updateDoc(docRef, { balance });
   }

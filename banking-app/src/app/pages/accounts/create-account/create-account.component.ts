@@ -27,8 +27,7 @@ export class CreateAccountComponent {
     type: ['chequing', Validators.required]
   });
 
-  async onSubmit() {
-    console.log(this.createAccountForm.value, "--> this.createAccountForm.value");
+  async onSubmit(): Promise<void> {
     if (this.createAccountForm.invalid) return;
     const {name, balance, type} = this.createAccountForm.value;
     const account: Account = {
@@ -40,7 +39,7 @@ export class CreateAccountComponent {
     await this.accountService.createAccount(account);
     this.router.navigate(['/accounts']);
   }
-  get selectedType() {
+  get selectedType(): 'chequing' | 'savings' {
     return this.createAccountForm.get('type')?.value as 'chequing' | 'savings';
   }
 }

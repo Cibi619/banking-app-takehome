@@ -1,7 +1,7 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { Firestore, addDoc, collection, getDocs, query, where } from '@angular/fire/firestore';
-import { forkJoin, from, map } from 'rxjs';
+import { Firestore, addDoc, collection, getDocs, query, where, DocumentReference } from '@angular/fire/firestore';
+import { forkJoin, from, map, Observable } from 'rxjs';
 import { Transaction } from '../models/transaction.model'
 
 @Injectable({
@@ -12,13 +12,13 @@ export class TransactionService {
     private injector = inject(Injector);
     private fireStore = inject(Firestore);
 
-    createTransaction(transaction: Transaction) {
+    createTransaction(transaction: Transaction): Promise<DocumentReference> {
       const userId = this.auth.currentUser?.uid;
       const transactionsRef = collection(this.fireStore, 'transactions');
       return addDoc(transactionsRef, {...transaction, userId})
     }
 
-    getTransactionsByAccount(accountId: string) {
+    getTransactionsByAccount(accountId: string): Observable<Transaction[]> {
       return runInInjectionContext(this.injector, () => {
       const transactionsRef = collection(this.fireStore, 'transactions');
       const sent$ = from(getDocs(query(

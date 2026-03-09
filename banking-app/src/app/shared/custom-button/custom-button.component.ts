@@ -11,7 +11,7 @@ export class CustomButtonComponent {
     @Input() label: string = '';
     @Input() accountType: 'chequing' | 'savings' = 'chequing';
 
-    get buttonColor() {
+    get buttonColor(): string {
       return this.accountType === 'chequing' ? 'primary' : 'accent';
     }
 }
