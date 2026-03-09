@@ -52,8 +52,6 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/accounts']);
       }
     } catch (error: any) {
-      console.log(error.code);
-      console.log(error.message);
       switch (error.code) {
         case 'auth/invalid-credential':
           this.loginForm.get('password')?.setErrors({ invalidCredential: true });

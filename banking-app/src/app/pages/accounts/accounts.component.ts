@@ -10,11 +10,11 @@ import { AuthService } from '../../services/auth.service';
 import { of, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatProgressSpinner} from '@angular/material/progress-spinner';
 import { LoadingService } from '../../services/loading.service';
-import { MatAnchor, MatButton } from '@angular/material/button';
+import { CustomButtonComponent } from '../../shared/custom-button/custom-button.component';
 
 @Component({
   selector: 'app-accounts',
-  imports: [NavbarComponent, MatIcon, MatCard, MatCardContent, RouterLink, TitleCasePipe, DecimalPipe, MatProgressSpinner, MatButton],
+  imports: [NavbarComponent, MatIcon, MatCard, MatCardContent, RouterLink, TitleCasePipe, DecimalPipe, MatProgressSpinner, CustomButtonComponent],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss'
 })

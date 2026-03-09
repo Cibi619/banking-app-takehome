@@ -10,7 +10,6 @@ export class AuthService {
   private injector = inject(Injector);
 
   signup(email: string, password: string): Promise<UserCredential> {
-    console.log(this.auth, "--> auth");
     return createUserWithEmailAndPassword(this.auth, email, password);
   }
   login(email: string, password: string): Promise<UserCredential> {

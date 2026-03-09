@@ -1,1 +1,6 @@
-<button mat-raised-button [color]="buttonColor" type="submit">{{label}}</button>
+<button mat-raised-button [color]="buttonColor" [type]="type">
+  @if (icon) {
+    <mat-icon>{{ icon }}</mat-icon>
+  }
+  {{ label }}
+</button>

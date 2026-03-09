@@ -3,14 +3,8 @@
   <div class="accounts-header">
     <h2>My Accounts</h2>
     <div class="header-actions">
-      <button mat-raised-button color="primary" routerLink="/accounts/create">
-        <mat-icon>add</mat-icon>
-        Create Account
-      </button>
-      <button mat-raised-button routerLink="/history">
-        <mat-icon>history</mat-icon>
-        History
-      </button>
+      <app-custom-button label="Create Account" icon="add" type="button" routerLink="/accounts/create"></app-custom-button>
+      <app-custom-button label="History" icon="history" type="button" routerLink="/history"></app-custom-button>
     </div>
   </div>
 
@@ -30,10 +24,9 @@
             <span class="account-name">{{ account.name }}</span>
           </div>
           <span class="account-balance">${{ account.balance | number:'1.2-2' }}</span>
-          <button mat-raised-button color="accent" [routerLink]="['/transfer']"
-            [queryParams]="{ accountId: account.id }">
-            Transfer
-          </button>
+          <app-custom-button label="Transfer" icon="swap_horiz" type="button" accountType="savings"
+            [routerLink]="['/transfer']" [queryParams]="{ accountId: account.id }">
+          </app-custom-button>
         </div>
       </mat-card-content>
     </mat-card>
@@ -44,10 +37,7 @@
   <div class="empty-state">
     <mat-icon>account_balance_wallet</mat-icon>
     <p>No accounts found</p>
-    <button mat-raised-button color="primary" routerLink="/accounts/create">
-      <mat-icon>add</mat-icon>
-      Create Account
-    </button>
+    <app-custom-button label="Create Account" icon="add" type="button" routerLink="/accounts/create"></app-custom-button>
   </div>
   }
 </div>

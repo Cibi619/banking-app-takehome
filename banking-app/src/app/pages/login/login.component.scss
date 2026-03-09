@@ -6,6 +6,12 @@
     height: 100vh;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .main-header {
   display: flex;
   align-items: center;
@@ -35,7 +41,8 @@
     margin-bottom: 16px;
   }
 
-  button {
+  app-custom-button {
+    display: block;
     width: 100%;
     margin-bottom: 16px;
   }
