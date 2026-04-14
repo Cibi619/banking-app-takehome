@@ -1,3 +1,45 @@
 .spacer {
   flex: 1 1 auto;
 }
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 260px;
+  white-space: normal;
+  height: auto;
+  padding: 10px 16px;
+
+  .notif-icon {
+    color: #666;
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .notif-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .notif-message {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .notif-time {
+    font-size: 11px;
+    color: #999;
+  }
+}
+
+.notif-actions {
+  border-top: 1px solid #e0e0e0;
+  margin-top: 4px;
+}
+
+.notif-clear {
+  color: #f44336;
+}

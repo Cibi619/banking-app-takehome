@@ -2,6 +2,39 @@
   <mat-icon>account_balance</mat-icon>
   <span>MyBanking</span>
   <span class="spacer"></span>
+
+  <button mat-icon-button [matMenuTriggerFor]="notifMenu" aria-label="Notifications">
+    <mat-icon
+      [matBadge]="notificationService.count()"
+      [matBadgeHidden]="notificationService.count() === 0"
+      matBadgeColor="warn"
+      matBadgeSize="small">
+      notifications
+    </mat-icon>
+  </button>
+
+  <mat-menu #notifMenu="matMenu" class="notification-menu">
+    @if (notificationService.count() === 0) {
+      <div class="notif-empty" mat-menu-item disabled>No notifications</div>
+    } @else {
+      @for (n of notificationService.all(); track n.id) {
+        <div mat-menu-item class="notif-item">
+          <mat-icon class="notif-icon">{{ n.message.includes('Transfer') ? 'swap_horiz' : 'account_balance_wallet' }}</mat-icon>
+          <span class="notif-text">
+            <span class="notif-message">{{ n.message }}</span>
+            <span class="notif-time">{{ n.timestamp | date:'short' }}</span>
+          </span>
+        </div>
+      }
+      <div class="notif-actions">
+        <button mat-menu-item (click)="notificationService.clear()" class="notif-clear">
+          <mat-icon>clear_all</mat-icon>
+          Clear all
+        </button>
+      </div>
+    }
+  </mat-menu>
+
   <button mat-button (click)="logout()">
     <mat-icon>logout</mat-icon>
     Logout

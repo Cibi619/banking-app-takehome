@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CustomButtonComponent, NavbarComponent } from '../../../shared';
+import { NotificationService } from '../../../services/notification.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AccountService } from '../../../services/account.service';
 import { Router, RouterModule } from '@angular/router';
@@ -20,6 +21,7 @@ export class CreateAccountComponent {
   private fb = inject(FormBuilder);
   private accountService = inject(AccountService);
   private router = inject(Router);
+  private notificationService = inject(NotificationService);
 
   createAccountForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -37,6 +39,7 @@ export class CreateAccountComponent {
       createdAt: Timestamp.now()
     };
     await this.accountService.createAccount(account);
+    this.notificationService.add(`${type} account "${name}" created successfully`);
     this.router.navigate(['/accounts']);
   }
   get selectedType(): 'chequing' | 'savings' {

@@ -6,5 +6,5 @@ export interface Transaction {
     toAccountId: string,
     amount: number,
     date: Timestamp,
-    description?: string
+    description?: string,
 }

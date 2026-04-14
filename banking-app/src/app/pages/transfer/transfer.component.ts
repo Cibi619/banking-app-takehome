@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { forkJoin, from, switchMap } from 'rxjs';
 import { Timestamp } from '@angular/fire/firestore';
 import { NavbarComponent } from '../../shared';
+import { NotificationService } from '../../services/notification.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
@@ -44,6 +45,7 @@ export class TransferComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
+  private notificationService = inject(NotificationService);
 
   transferForm = this.fb.group({
     fromAccountId: ['', Validators.required],
@@ -116,7 +118,12 @@ export class TransferComponent implements OnInit {
         description: description || ''
       })))
     ).subscribe({
-      next: () => this.router.navigate(['/accounts']),
+      next: () => {
+        const fromAccount = this.accounts.find(acc => acc.id === fromAccountId);
+        const toAccount = this.accounts.find(acc => acc.id === toAccountId);
+        this.notificationService.add(`Transfer of $${amount} from ${fromAccount?.name} to ${toAccount?.name} was successful`);
+        this.router.navigate(['/accounts']);
+      },
       error: (err) => {
         console.error('Transfer failed', err);
         this.errorMessage = 'Transfer failed, please try again';
