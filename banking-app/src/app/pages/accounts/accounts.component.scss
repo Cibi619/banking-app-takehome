@@ -80,3 +80,26 @@
     font-size: 18px;
   }
 }
+
+.accounts-header {
+  .header-title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h2 {
+      margin: 0;
+    }
+
+    .total-balance-badge {
+      background-color: #e3f2fd;
+      color: #1565c0;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 14px;
+      margin-left: 1vw;
+    }
+  }
+}

@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { FirebaseError } from '@angular/fire/app';
 
 @Component({
   selector: 'app-login',
@@ -51,22 +52,24 @@ export class LoginComponent implements OnInit {
         await this.authService.signup(email, password);
         this.router.navigate(['/accounts']);
       }
-    } catch (error: any) {
-      switch (error.code) {
-        case 'auth/invalid-credential':
-          this.loginForm.get('password')?.setErrors({ invalidCredential: true });
-          this.errorMessage = 'Incorrect password';
-          break;
-        case 'auth/invalid-email':
-          this.loginForm.get('email')?.setErrors({ invalidEmail: true });
-          this.errorMessage = 'Invalid email address';
-          break;
-        case 'auth/email-already-in-use':
-          this.loginForm.get('email')?.setErrors({ invalidEmail: true });
-          this.errorMessage = 'Email already in use';
-          break;
-        default:
-          this.errorMessage = 'Something went wrong. Please try again';
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case 'auth/invalid-credential':
+            this.loginForm.get('password')?.setErrors({ invalidCredential: true });
+            this.errorMessage = 'Incorrect password';
+            break;
+          case 'auth/invalid-email':
+            this.loginForm.get('email')?.setErrors({ invalidEmail: true });
+            this.errorMessage = 'Invalid email address';
+            break;
+          case 'auth/email-already-in-use':
+            this.loginForm.get('email')?.setErrors({ invalidEmail: true });
+            this.errorMessage = 'Email already in use';
+            break;
+          default:
+            this.errorMessage = 'Something went wrong. Please try again';
+        }
       }
     }
   }

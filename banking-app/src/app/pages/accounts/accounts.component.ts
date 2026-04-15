@@ -21,6 +21,7 @@ import { CustomButtonComponent } from '../../shared/custom-button/custom-button.
 })
 export class AccountsComponent implements OnInit {
   accounts: Account[] = [];
+  totalBalance: number = 0;
   loadingService = inject(LoadingService);
 
   private destroyRef = inject(DestroyRef);
@@ -41,6 +42,11 @@ export class AccountsComponent implements OnInit {
         console.error('Error fetching accounts', err)
         this.loadingService.stop();
       }
+    });
+    this.accountService.getTotalBalance().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(totalBalance => {
+      this.totalBalance = totalBalance;
     });
   }
 }

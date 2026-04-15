@@ -61,6 +61,7 @@ export class HistoryComponent implements OnInit {
 
   onSearch(term: string) {
     this.searchTerm = term;
+    // console.log('Searching for:', term);
     const lower = term.toLowerCase().trim();
     if (!lower) {
       this.filteredTransactions = this.transactions;

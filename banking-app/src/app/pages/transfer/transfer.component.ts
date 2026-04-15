@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { TransactionService } from '../../services/transaction.service';
@@ -6,7 +6,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog'
 import { Account } from '../../models/account.model';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-import { forkJoin, from, switchMap } from 'rxjs';
+import { forkJoin, from, switchMap, takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Timestamp } from '@angular/fire/firestore';
 import { NavbarComponent } from '../../shared';
 import { NotificationService } from '../../services/notification.service';
@@ -16,6 +17,7 @@ import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import { MatSelect, MatOption } from '@angular/material/select'
 import { MatInputModule } from '@angular/material/input';
 import { CustomButtonComponent } from '../../shared/custom-button/custom-button.component';
+import { LoadingService } from '../../services/loading.service';
 @Component({
   selector: 'app-transfer',
   imports: [MatDialogModule,
@@ -38,6 +40,7 @@ import { CustomButtonComponent } from '../../shared/custom-button/custom-button.
 })
 export class TransferComponent implements OnInit {
   accounts: Account[] = [];
+  totalBalance: number = 0;
 
   private fb = inject(FormBuilder);
   private accountService = inject(AccountService);
@@ -46,6 +49,8 @@ export class TransferComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
+  private destroyRef = inject(DestroyRef);
+  loadingService = inject(LoadingService);
 
   transferForm = this.fb.group({
     fromAccountId: ['', Validators.required],
@@ -56,13 +61,22 @@ export class TransferComponent implements OnInit {
   errorMessage: string | undefined;
 
   ngOnInit() {
-    this.accountService.getAccounts().subscribe(accounts => {
+    // this.loadingService.start();
+    this.accountService.getAccounts().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(accounts => {
+      // this.loadingService.stop();
       this.accounts = accounts;
       const accountId = this.route.snapshot.queryParams['accountId'];
       if (accountId) {
         this.transferForm.patchValue({ fromAccountId: accountId });
       }
     })
+    this.accountService.getTotalBalance().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(totalBalance => {
+      this.totalBalance = totalBalance;
+    });
   }
 
   get availableBalance(): number {
@@ -88,7 +102,9 @@ export class TransferComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { fromAccount, toAccount, amount }
     });
-    dialogRef.afterClosed().subscribe(confirmed => {
+    dialogRef.afterClosed().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(confirmed => {
       if (confirmed) {
         this.performTransfer();
       }
@@ -116,7 +132,8 @@ export class TransferComponent implements OnInit {
         amount: amount!,
         date: Timestamp.now(),
         description: description || ''
-      })))
+      }))),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
         const fromAccount = this.accounts.find(acc => acc.id === fromAccountId);

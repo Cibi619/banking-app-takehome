@@ -18,6 +18,12 @@ export class AccountService {
     return addDoc(accountsRef, { ...account, userId });
   }
 
+  getTotalBalance(): Observable<number> { 
+    return this.getAccounts().pipe(
+      map(accounts => accounts.reduce((sum, acc) => sum + acc.balance, 0))
+    );
+  }
+
   getAccounts(): Observable<Account[]> {
     return runInInjectionContext(this.injector, () => {
       const uid = this.auth.currentUser?.uid;
@@ -29,7 +35,7 @@ export class AccountService {
         map(snapshot => snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
-        }) as unknown as Account))
+        }) as Account))
       );
     });
   }

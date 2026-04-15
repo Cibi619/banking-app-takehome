@@ -1,7 +1,10 @@
 <app-navbar></app-navbar>
 <div class="accounts-container">
   <div class="accounts-header">
-    <h2>My Accounts</h2>
+    <div class="header-title-section">
+        <h2>My Accounts</h2>
+        <span class="total-balance-badge">Total: ${{ totalBalance | number: '1.2-2' }}</span>
+    </div>
     <div class="header-actions">
       <app-custom-button label="Create Account" icon="add" type="button" routerLink="/accounts/create"></app-custom-button>
       <app-custom-button label="History" icon="history" type="button" routerLink="/history"></app-custom-button>
